@@ -1,15 +1,7 @@
 import { useState } from "react";
 import {
-  Container,
-  Title,
-  Text,
-  Button,
-  Stack,
-  Card,
-  Group,
-  Checkbox,
-  ActionIcon,
-  useMantineColorScheme,
+  Container, Title, Text, Button, Stack, Card, Group,
+  Checkbox, ActionIcon
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { LoremIpsum } from "lorem-ipsum";
@@ -27,34 +19,10 @@ interface Task {
 
 export default function HomePage() {
   const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: "1",
-      title: "Read a book",
-      description: "Vite + React + Mantine + TS",
-      isDone: false,
-      dueDate: new Date(),
-      doneAt: null,
-    },
-    {
-      id: "2",
-      title: "Write code",
-      description: "Finish project for class",
-      isDone: false,
-      dueDate: new Date(),
-      doneAt: null,
-    },
-    {
-      id: "3",
-      title: "Deploy app",
-      description: "Push project to GitHub Pages",
-      isDone: false,
-      dueDate: new Date(),
-      doneAt: null,
-    },
+    { id: "1", title: "Read a book", description: "Vite + React + Mantine + TS", isDone: false, dueDate: new Date(), doneAt: null },
+    { id: "2", title: "Write code", description: "Finish project for class", isDone: false, dueDate: new Date(), doneAt: null },
+    { id: "3", title: "Deploy app", description: "Push project to GitHub Pages", isDone: false, dueDate: new Date(), doneAt: null },
   ]);
-
-  const { colorScheme } = useMantineColorScheme(); // ใช้แค่ตรวจสถานะธีมถ้าต้องการ
-  const isDark = colorScheme === "dark";
 
   const lorem = new LoremIpsum({
     sentencesPerParagraph: { max: 8, min: 4 },
@@ -102,23 +70,15 @@ export default function HomePage() {
             <Card withBorder shadow="sm" radius="md" mb="sm" key={task.id}>
               <Group justify="space-between" align="flex-start">
                 <Stack>
-                  <Text
-                    fw={600}
-                    td={task.isDone ? "line-through" : "none"}
-                    size="lg"
-                  >
+                  <Text fw={600} td={task.isDone ? "line-through" : "none"} size="lg">
                     {task.title}
                   </Text>
-                  <Text size="sm" c="dimmed">
-                    {task.description}
-                  </Text>
+                  <Text size="sm" c="dimmed">{task.description}</Text>
                   {task.dueDate && (
-                    <Text size="xs" c="gray">
-                      Due: {task.dueDate.toLocaleDateString()}
-                    </Text>
+                    <Text size="xs" c="gray">Due: {task.dueDate.toLocaleDateString()}</Text>
                   )}
                   {task.doneAt && (
-                    <Text size="xs" c="muay.6">
+                    <Text size="xs" c="muay">
                       Done at: {task.doneAt.toLocaleString()}
                     </Text>
                   )}
@@ -131,11 +91,7 @@ export default function HomePage() {
                     checked={task.isDone}
                     onClick={() => toggleDoneTask(task.id)}
                   />
-                  <ActionIcon
-                    variant="light"
-                    color="red"
-                    onClick={() => deleteTask(task.id)}
-                  >
+                  <ActionIcon variant="light" color="red" onClick={() => deleteTask(task.id)}>
                     <IconTrash color="red" size={20} stroke={2} />
                   </ActionIcon>
                 </Group>
