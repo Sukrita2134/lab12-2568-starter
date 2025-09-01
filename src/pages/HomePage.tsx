@@ -9,17 +9,20 @@ import {
   Group,
   Checkbox,
   ActionIcon,
+  useMantineColorScheme,
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { LoremIpsum } from "lorem-ipsum";
 import { randomId } from "@mantine/hooks";
 import { v4 as uuidv4 } from "uuid";
+
 interface Task {
   id: string;
   title: string;
   description: string;
   isDone: boolean;
   dueDate: Date | null;
+  doneAt?: Date | null;
 }
 
 export default function HomePage() {
@@ -30,6 +33,7 @@ export default function HomePage() {
       description: "Vite + React + Mantine + TS",
       isDone: false,
       dueDate: new Date(),
+      doneAt: null,
     },
     {
       id: "2",
@@ -37,6 +41,7 @@ export default function HomePage() {
       description: "Finish project for class",
       isDone: false,
       dueDate: new Date(),
+      doneAt: null,
     },
     {
       id: "3",
@@ -44,17 +49,16 @@ export default function HomePage() {
       description: "Push project to GitHub Pages",
       isDone: false,
       dueDate: new Date(),
+      doneAt: null,
     },
   ]);
+
+  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const isDark = colorScheme === "dark";
+
   const lorem = new LoremIpsum({
-    sentencesPerParagraph: {
-      max: 8,
-      min: 4,
-    },
-    wordsPerSentence: {
-      max: 16,
-      min: 4,
-    },
+    sentencesPerParagraph: { max: 8, min: 4 },
+    wordsPerSentence: { max: 16, min: 4 },
   });
 
   const handleAdd = () => {
@@ -64,21 +68,30 @@ export default function HomePage() {
       description: lorem.generateWords(10),
       isDone: false,
       dueDate: new Date(),
+      doneAt: null,
     };
     setTasks((prev) => [...prev, newTask]);
   };
 
-  // Delete task
   const deleteTask = (taskId: string) => {
     setTasks((prev) => prev.filter((task) => task.id !== taskId));
   };
 
-  // Toggle done
   const toggleDoneTask = (taskId: string) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, isDone: !t.isDone } : t))
+      prev.map((t) =>
+        t.id === taskId
+          ? {
+              ...t,
+              isDone: !t.isDone,
+              doneAt: !t.isDone ? new Date() : null,
+            }
+          : t
+      )
     );
   };
+
+  const toggleTheme = () => setColorScheme(isDark ? "light" : "dark");
 
   return (
     <Container size="sm" py="lg">
@@ -87,9 +100,9 @@ export default function HomePage() {
         <Text size="sm" c="dimmed">
           All : {tasks.length} | Done : {tasks.filter((t) => t.isDone).length}
         </Text>
-        {/* เพิ่ม Task */}
+
         <Button onClick={handleAdd}>Add Task</Button>
-        {/* แสดง Task Cards */}
+
         <Stack w="100%">
           {tasks.map((task) => (
             <Card withBorder shadow="sm" radius="md" mb="sm" key={task.id}>
@@ -102,7 +115,6 @@ export default function HomePage() {
                   >
                     {task.title}
                   </Text>
-
                   <Text size="sm" c="dimmed">
                     {task.description}
                   </Text>
@@ -111,32 +123,26 @@ export default function HomePage() {
                       Due: {task.dueDate.toLocaleDateString()}
                     </Text>
                   )}
-                  {/* แสดง Date & Time */}
-                  <Text size="xs" c="gray">
-                    Done at:
-                  </Text>
+                  {task.doneAt && (
+                    <Text size="xs" c="muay">
+                      Done at: {task.doneAt.toLocaleString()}
+                    </Text>
+                  )}
                 </Stack>
-                {/* แสดง Button Done & Button Delete */}
                 <Group>
-                  <Button
-                    style={{
-                      backgroundColor: "#71c32fda",
-                      color: "#dce6e7ff",
-                    }}
-                    variant="light"
-                    size="xs"
+                  <Checkbox
+                    label="Done"
+                    color="green"
+                    checked={task.isDone}
                     onClick={() => toggleDoneTask(task.id)}
-                  >
-                    Done
-                  </Button>
-                  <Button
-                    color="chanadda"
+                  />
+                  <ActionIcon
                     variant="light"
-                    size="xs"
+                    color="red"
                     onClick={() => deleteTask(task.id)}
                   >
-                    Delete
-                  </Button>
+                    <IconTrash color="red" size={20} stroke={2} />
+                  </ActionIcon>
                 </Group>
               </Group>
             </Card>
