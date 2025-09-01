@@ -53,7 +53,7 @@ export default function HomePage() {
     },
   ]);
 
-  const { colorScheme, setColorScheme } = useMantineColorScheme();
+  const { colorScheme } = useMantineColorScheme(); // ใช้แค่ตรวจสถานะธีมถ้าต้องการ
   const isDark = colorScheme === "dark";
 
   const lorem = new LoremIpsum({
@@ -81,17 +81,11 @@ export default function HomePage() {
     setTasks((prev) =>
       prev.map((t) =>
         t.id === taskId
-          ? {
-              ...t,
-              isDone: !t.isDone,
-              doneAt: !t.isDone ? new Date() : null,
-            }
+          ? { ...t, isDone: !t.isDone, doneAt: !t.isDone ? new Date() : null }
           : t
       )
     );
   };
-
-  const toggleTheme = () => setColorScheme(isDark ? "light" : "dark");
 
   return (
     <Container size="sm" py="lg">
@@ -124,11 +118,12 @@ export default function HomePage() {
                     </Text>
                   )}
                   {task.doneAt && (
-                    <Text size="xs" c="muay">
+                    <Text size="xs" c="muay.6">
                       Done at: {task.doneAt.toLocaleString()}
                     </Text>
                   )}
                 </Stack>
+
                 <Group>
                   <Checkbox
                     label="Done"
